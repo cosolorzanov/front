@@ -1,0 +1,47 @@
+<h1 mat-dialog-title>{{this.data.method }} Persona</h1>
+<div mat-dialog-content>
+  <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="fill">
+      <mat-label>Tipo de documento</mat-label>
+      <mat-select formControlName="docType">
+        <mat-option *ngFor="let documentType of documentTypes" [value]="documentType.id">
+          {{ documentType.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Número de documento</mat-label>
+      <input type="number" matInput formControlName="docNumber">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Nombres</mat-label>
+      <input matInput formControlName="firstName">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Apellidos</mat-label>
+      <input matInput formControlName="lastName">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Dirección</mat-label>
+      <input matInput formControlName="address">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Fecha de nacimiento</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="birthdate">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Teléfono de contacto</mat-label>
+      <input type="number" matInput formControlName="phone">
+    </mat-form-field>
+    <br>
+    <button mat-raised-button color="primary" type="submit">Guardar</button>
+  </form>
+</div>
