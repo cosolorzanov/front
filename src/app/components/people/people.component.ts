@@ -27,7 +27,7 @@ export class PeopleComponent implements OnInit, AfterViewInit{
     this.getPeople();
   }
   ngAfterViewInit() {
-    const sortState: Sort = {active: 'creationDate', direction: 'desc'};
+    const sortState: Sort = {active: 'creationDate', direction: 'asc'};
     this.sort.active = sortState.active;
     this.sort.direction = sortState.direction;
     this.dataSource.sort = this.sort;
@@ -39,8 +39,13 @@ export class PeopleComponent implements OnInit, AfterViewInit{
     })
   }
 
-  view() {
-
+  view(person:PersonModel) {
+    const dialogRef = this.dialog.open(DialogAddPerson, {
+      data: {
+        method: "Ver",
+        dataPerson: person
+      },
+    });
   }
 
   edit(person:PersonModel) {
@@ -85,6 +90,7 @@ export class PeopleComponent implements OnInit, AfterViewInit{
 export class DialogAddPerson implements OnInit{
 
   myForm: FormGroup;
+  readonly :boolean = false;
   formTitles: FormGroup;
   dataSource = new MatTableDataSource<TitleModel>([]);
   deletedTitles: TitleModel[] = [];
@@ -101,7 +107,6 @@ export class DialogAddPerson implements OnInit{
       birthDate: ['', Validators.required],
       phone: ['', Validators.required]
     });
-
     this.formTitles = new FormGroup({
       titleName: new FormControl('',Validators.required),
       level: new FormControl('',Validators.required),
@@ -109,13 +114,18 @@ export class DialogAddPerson implements OnInit{
       dateObtained: new FormControl('', Validators.required)
     });
 
+    if(data.method === 'Ver'){
+      this.readonly = true;
+      this.displayedColumns.splice(this.displayedColumns.indexOf('options'),1);
+    }
   }
   documentTypes : Document_typeModel[] = [];
   maxDate: Date = new Date ();
 
   ngOnInit() {
+
     this.getDocumentTypes();
-    if (this.data.method === 'Editar'){
+    if (this.data.method === 'Editar' || this.readonly ){
       this.myForm.patchValue(this.data.dataPerson);
       let d = new Date(this.data.dataPerson.birthDate);
       d.setMinutes( d.getMinutes() + d.getTimezoneOffset() );
@@ -123,6 +133,7 @@ export class DialogAddPerson implements OnInit{
 
       this.getTitles(this.data.dataPerson.id);
     }
+    if (this.readonly) this.myForm.disable();
   }
 
   getTitles(personId: number){
@@ -148,7 +159,7 @@ export class DialogAddPerson implements OnInit{
       phone: this.myForm.get('phone')!.value,
     };
     if(this.myForm.valid)
-    if (this.data.method === 'Editar'){
+    if (this.data.method === 'Editar' || this.readonly){
       personData.id = this.data.dataPerson.id;
       this.apiService.editPerson(personData).subscribe(response => {
           this.updateTitles(response.id);

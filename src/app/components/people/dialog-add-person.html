@@ -3,7 +3,7 @@
   <mat-card>
     <mat-card-header><mat-card-title>Información Básica</mat-card-title></mat-card-header>
     <mat-card-content>
-    <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="myForm" (ngSubmit)="onSubmit()" >
       <mat-form-field appearance="fill">
         <mat-label>Tipo de documento</mat-label>
         <mat-select formControlName="documentTypeId">
@@ -52,16 +52,16 @@
   <mat-card>
     <mat-card-header><mat-card-title>Formación académica</mat-card-title></mat-card-header>
     <mat-card-content>
-      <form [formGroup]="formTitles" (submit)="addTitlesToDS()">
+      <form [formGroup]="formTitles" (submit)="addTitlesToDS()" *ngIf="!readonly">
         <mat-form-field>
           <input matInput placeholder="Titulo obtenido" formControlName="titleName">
         </mat-form-field>
         <mat-form-field>
           <mat-select placeholder="Nivel de formación" formControlName="level">
-            <mat-option value="0">Bachiller</mat-option>
-            <mat-option value="10">Técnico/Tecnológico</mat-option>
-            <mat-option value="20">Profesional</mat-option>
-            <mat-option value="30">Postgrado</mat-option>
+            <mat-option value="Bachiller">Bachiller</mat-option>
+            <mat-option value="Técnico/Tecnológico">Técnico/Tecnológico</mat-option>
+            <mat-option value="Profesional">Profesional</mat-option>
+            <mat-option value="Postgrado">Postgrado</mat-option>
           </mat-select>
         </mat-form-field>
         <mat-form-field>
@@ -82,7 +82,7 @@
         </ng-container>
 
         <ng-container matColumnDef="level">
-          <th mat-header-cell *matHeaderCellDef>NIvel de formación</th>
+          <th mat-header-cell *matHeaderCellDef>Nivel de formación</th>
           <td mat-cell *matCellDef="let element">{{element.level}}</td>
         </ng-container>
 
@@ -95,7 +95,7 @@
           <th mat-header-cell *matHeaderCellDef>Fecha de grado</th>
           <td mat-cell *matCellDef="let element">{{element.dateObtained}}</td>
         </ng-container>
-        <ng-container matColumnDef="options">
+        <ng-container matColumnDef="options" >
           <th mat-header-cell *matHeaderCellDef> Opciones </th>
           <td mat-cell *matCellDef="let element">
             <button mat-icon-button color="warn" (click)="removeTitleToDS(element)">
@@ -112,5 +112,5 @@
 </div>
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close>Cancelar</button>
-  <button mat-raised-button color="primary" type="submit" (click)="onSubmit()">Guardar</button>
+  <button mat-raised-button color="primary" type="submit" (click)="onSubmit()" *ngIf="!readonly">Guardar</button>
 </mat-dialog-actions>
