@@ -33,8 +33,17 @@ export class PeopleComponent {
 
   }
 
-  edit() {
+  edit(person:PersonModel) {
+    const dialogRef = this.dialog.open(DialogAddPerson, {
+      data: {
+        method: "Editar",
+        dataPerson: person
+      },
+    });
 
+    dialogRef.afterClosed().subscribe((result:boolean) => {
+      if( result) this.getPeople();
+    });
   }
 
   remove() {
@@ -45,7 +54,7 @@ export class PeopleComponent {
     const dialogRef = this.dialog.open(DialogAddPerson, {
       data: {
         method: "Adicionar",
-        data: {}
+        dataPerson: {}
       },
     });
 
@@ -64,20 +73,28 @@ export class DialogAddPerson {
   myForm: FormGroup;
 
   constructor(public dialogRef: MatDialogRef<DialogAddPerson>,private apiService:MainService, @Inject(MAT_DIALOG_DATA) public data:any, private fb: FormBuilder) {
+
     this.myForm = this.fb.group({
-      docType: ['', Validators.required],
-      docNumber: ['', Validators.required],
+      documentTypeId: ['', Validators.required],
+      documentNumber: ['', Validators.required],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       address: ['', Validators.required],
-      birthdate: ['', Validators.required],
+      birthDate: ['', Validators.required],
       phone: ['', Validators.required]
     });
+
   }
   documentTypes : Document_typeModel[] = [];
 
   ngOnInit() {
     this.getDocumentTypes();
+    if (this.data.method === 'Editar'){
+      this.myForm.patchValue(this.data.dataPerson);
+      let d = new Date(this.data.dataPerson.birthDate);
+      d.setMinutes( d.getMinutes() + d.getTimezoneOffset() );
+      this.myForm.patchValue({birthDate:d})
+    }
   }
   getDocumentTypes(){
     this.apiService.getDocumentTypes().subscribe((response) =>{
@@ -88,21 +105,33 @@ export class DialogAddPerson {
   onSubmit() {
     // @ts-ignore
     const personData: PersonModel = {
-      documentTypeId: this.myForm.get('docType')!.value,
-      documentNumber: this.myForm.get('docNumber')!.value,
+      documentTypeId: this.myForm.get('documentTypeId')!.value,
+      documentNumber: this.myForm.get('documentNumber')!.value,
       firstName: this.myForm.get('firstName')!.value,
       lastName: this.myForm.get('lastName')!.value,
       address: this.myForm.get('address')!.value,
-      birthDate: this.myForm.get('birthdate')!.value,
+      birthDate: this.myForm.get('birthDate')!.value,
       phone: this.myForm.get('phone')!.value,
     };
-    this.apiService.addPerson(personData).subscribe(response =>{
-            alert("Persona guardada con exito. ");
-            },
-      err => alert("Lo sentimos,ha sucedido un error "+err),
-      () => {
-        console.log('Proceso terminado');
-        this.dialogRef.close(true);
-    });
+    if (this.data.method === 'Editar'){
+      personData.id = this.data.dataPerson.id;
+      this.apiService.editPerson(personData).subscribe(response => {
+          alert("Persona con ID "+response.id+" editada con exito.");
+        },
+        err => alert("Ha sucedido un error " + err),
+        () => {
+          console.log('Proceso terminado');
+          this.dialogRef.close(true);
+        });
+    }else {
+      this.apiService.addPerson(personData).subscribe(response => {
+          alert("Persona con ID "+response.id+" guardada con exito. ");
+        },
+        err => alert("Ha sucedido un error " + err),
+        () => {
+          console.log('Proceso terminado');
+          this.dialogRef.close(true);
+        });
+    }
   }
 }

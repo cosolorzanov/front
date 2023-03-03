@@ -3,7 +3,7 @@
   <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
     <mat-form-field appearance="fill">
       <mat-label>Tipo de documento</mat-label>
-      <mat-select formControlName="docType">
+      <mat-select formControlName="documentTypeId">
         <mat-option *ngFor="let documentType of documentTypes" [value]="documentType.id">
           {{ documentType.name }}
         </mat-option>
@@ -12,7 +12,7 @@
 
     <mat-form-field appearance="fill">
       <mat-label>Número de documento</mat-label>
-      <input type="number" matInput formControlName="docNumber">
+      <input type="number" matInput formControlName="documentNumber">
     </mat-form-field>
 
     <mat-form-field appearance="fill">
@@ -32,7 +32,7 @@
 
     <mat-form-field appearance="fill">
       <mat-label>Fecha de nacimiento</mat-label>
-      <input matInput [matDatepicker]="picker" formControlName="birthdate">
+      <input matInput [matDatepicker]="picker" formControlName="birthDate">
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>

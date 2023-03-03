@@ -16,7 +16,7 @@ export class MainService {
         list:   environment.API_URL+'/people/list',
         add:    environment.API_URL+'/people/add/',
         delete: (personId: string) => environment.API_URL+`/people/delete/${personId}`,
-        update: environment.API_URL+'/people/update'
+        update: environment.API_URL+'/people/update/'
       },
       titles:{
         list:   (personId: string) => environment.API_URL+`/titles/list/${personId}`,
@@ -42,5 +42,9 @@ export class MainService {
 
   public addPerson(body: PersonModel) {
     return this.http.post<PersonModel>(this.API_ROUTES.people.add,body);
+  }
+
+  editPerson(personData: PersonModel) {
+    return this.http.post<PersonModel>(this.API_ROUTES.people.update,personData);
   }
 }
