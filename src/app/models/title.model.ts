@@ -1,5 +1,5 @@
 
-interface TitleModel {
+export interface TitleModel {
   id:number;
   titleName:string;
   level:string;

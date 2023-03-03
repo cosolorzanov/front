@@ -4,6 +4,7 @@ import {environment} from "../../environments/environment";
 import {Observable} from "rxjs";
 import {PersonModel} from "../models/person.model";
 import {Document_typeModel} from "../models/document_type.model";
+import {TitleModel} from "../models/title.model";
 
 @Injectable({
   providedIn: 'root'
@@ -15,13 +16,13 @@ export class MainService {
       people:{
         list:   environment.API_URL+'/people/list',
         add:    environment.API_URL+'/people/add/',
-        delete: (personId: string) => environment.API_URL+`/people/delete/${personId}`,
+        delete: (personId: number) => environment.API_URL+`/people/delete/${personId}`,
         update: environment.API_URL+'/people/update/'
       },
       titles:{
-        list:   (personId: string) => environment.API_URL+`/titles/list/${personId}`,
-        add:    environment.API_URL+'/titles/add',
-        delete: (titleId: string) => environment.API_URL+`/titles/delete/${titleId}`,
+        list:   (personId: number) => environment.API_URL+`/titles/list/${personId}`,
+        add:    environment.API_URL+'/titles/add/',
+        delete: (titleId: number) => environment.API_URL+`/titles/delete/${titleId}`,
         update: environment.API_URL+'/titles/update'
       },
       document_types:{
@@ -46,5 +47,21 @@ export class MainService {
 
   editPerson(personData: PersonModel) {
     return this.http.post<PersonModel>(this.API_ROUTES.people.update,personData);
+  }
+
+  deletePerson(personId:number){
+    return this.http.delete(this.API_ROUTES.people.delete(personId))
+  }
+
+  getTitles(personId:number){
+    return this.http.get<TitleModel[]>(this.API_ROUTES.titles.list(personId))
+  }
+
+  deleteTitle(titleId:number){
+    return this.http.delete(this.API_ROUTES.titles.delete(titleId));
+  }
+
+  public addTitle(title: TitleModel) {
+    return this.http.post<TitleModel>(this.API_ROUTES.titles.add, title);
   }
 }
