@@ -35,7 +35,7 @@
 
       <mat-form-field appearance="fill">
         <mat-label>Fecha de nacimiento</mat-label>
-        <input matInput [matDatepicker]="picker" formControlName="birthDate">
+        <input matInput [max]="maxDate" [matDatepicker]="picker" formControlName="birthDate">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
@@ -68,7 +68,7 @@
           <input matInput placeholder="Institución" formControlName="institution">
         </mat-form-field>
         <mat-form-field>
-          <input matInput [matDatepicker]="pickerTitle" placeholder="Fecha de grado" formControlName="dateObtained">
+          <input matInput [max]="maxDate" [matDatepicker]="pickerTitle" placeholder="Fecha de grado" formControlName="dateObtained">
           <mat-datepicker-toggle matSuffix [for]="pickerTitle"></mat-datepicker-toggle>
           <mat-datepicker #pickerTitle></mat-datepicker>
         </mat-form-field>
@@ -109,5 +109,8 @@
 
     </mat-card-content>
   </mat-card>
-  <button mat-raised-button color="primary" type="submit" (click)="onSubmit()">Guardar</button>
 </div>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancelar</button>
+  <button mat-raised-button color="primary" type="submit" (click)="onSubmit()">Guardar</button>
+</mat-dialog-actions>

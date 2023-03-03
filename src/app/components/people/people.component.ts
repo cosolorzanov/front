@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {AfterViewInit, Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
 import {PersonModel} from "../../models/person.model";
 import {MainService} from "../../services/main.service";
@@ -6,27 +6,36 @@ import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Document_typeModel} from "../../models/document_type.model";
 import {TitleModel} from "../../models/title.model";
+import {MatSort, MatSortable, Sort} from "@angular/material/sort";
 
 @Component({
   selector: 'app-people',
   templateUrl: './people.component.html',
   styleUrls: ['./people.component.css']
 })
-export class PeopleComponent implements OnInit{
+export class PeopleComponent implements OnInit, AfterViewInit{
 
   displayedColumns: string[] = ['id', 'creationDate', 'names', 'options'];
   dataSource  = new MatTableDataSource<PersonModel>([]);
+  @ViewChild(MatSort) sort: MatSort = new MatSort();
 
-  constructor(private apiService:MainService, public dialog: MatDialog ) {  }
+  constructor(private apiService:MainService, public dialog: MatDialog ) {
+    console.log(this.sort)
+  }
 
   ngOnInit() {
     this.getPeople();
+  }
+  ngAfterViewInit() {
+    const sortState: Sort = {active: 'creationDate', direction: 'desc'};
+    this.sort.active = sortState.active;
+    this.sort.direction = sortState.direction;
+    this.dataSource.sort = this.sort;
   }
 
   getPeople(){
     this.apiService.getPeople().subscribe((response) =>{
       this.dataSource.data = response;
-
     })
   }
 
@@ -102,6 +111,7 @@ export class DialogAddPerson implements OnInit{
 
   }
   documentTypes : Document_typeModel[] = [];
+  maxDate: Date = new Date ();
 
   ngOnInit() {
     this.getDocumentTypes();
@@ -137,6 +147,7 @@ export class DialogAddPerson implements OnInit{
       birthDate: this.myForm.get('birthDate')!.value,
       phone: this.myForm.get('phone')!.value,
     };
+    if(this.myForm.valid)
     if (this.data.method === 'Editar'){
       personData.id = this.data.dataPerson.id;
       this.apiService.editPerson(personData).subscribe(response => {
