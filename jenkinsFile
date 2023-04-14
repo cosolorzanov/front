@@ -8,7 +8,7 @@ pipeline {
         }
         stage('run') {
             steps {
-                sh 'docker run --name front --rm -p 80:4200 front'
+                sh 'docker run -d --name front --rm -p 80:4200 front npm run -- ng serve --host 0.0.0.0 --disable-host-check'
             }
         }
     }
