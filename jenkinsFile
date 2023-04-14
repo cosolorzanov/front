@@ -1,9 +1,9 @@
 pipeline {
-    agent any
+    agent {label 'app'}
     stages {
-        stage('hello') {
+        stage('build') {
             steps {
-                sh 'pwd;ls'
+                sh 'docker build -t front .'
             }
         }
     }
