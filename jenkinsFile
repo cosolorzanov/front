@@ -8,7 +8,7 @@ pipeline {
         }
         stage('run') {
             steps {
-                sh 'docker --name front --rm run -p 80:4200 front'
+                sh 'docker run --name front --rm -p 80:4200 front'
             }
         }
     }
