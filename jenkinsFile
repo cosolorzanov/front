@@ -6,5 +6,10 @@ pipeline {
                 sh 'docker build -t front .'
             }
         }
+        stage('run') {
+            steps {
+                sh 'docker --name front --rm run -p 80:4200 front'
+            }
+        }
     }
 }
